@@ -47,13 +47,12 @@ export default class TextClassifier {
   }
 
   normalizeScore(
-    corpus: string,
+    corpusLength: number,
     score: number,
     alpha: number,
     scale: number,
   ): number {
-    const size: number = corpus.length;
     const scaledAlpha: number = Math.abs(alpha) ** scale;
-    return 1 - Math.exp((-scaledAlpha * score) / size);
+    return 1 - Math.exp((-scaledAlpha * score) / corpusLength);
   }
 }

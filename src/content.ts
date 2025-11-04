@@ -33,7 +33,7 @@ window.onload = () => {
       textClassifier.analyze(corpus);
     const score: number = textClassifier.calculateScore(matchMap);
     const normalizedScore: number = textClassifier.normalizeScore(
-      corpus,
+      corpus.length,
       score,
       alpha,
       2.25,
