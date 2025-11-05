@@ -7,10 +7,10 @@
   "action": {
     "default_popup": "index.html",
     "default_icon": {
-      "16": "logo_16x16.png",
-      "32": "logo_32x32.png",
-      "48": "logo_48x48.png",
-      "128": "logo_128x128.png"
+      "16": "icon_16.png",
+      "32": "icon_32.png",
+      "48": "icon_48.png",
+      "128": "icon_128.png"
     }
   },
   "background": {
