@@ -59,7 +59,7 @@ onMounted(async () => {
 .popup__page-stats {
   @apply flex flex-col;
   @apply justify-center items-center text-center;
-  @apply p-10 w-full min-h-25;
+  @apply p-10 w-full;
 }
 
 .page-stats__score-label {
