@@ -4,8 +4,9 @@ import { Readability } from "@mozilla/readability";
 const textClassifier = new TextClassifier(1024);
 const threshold = 0.5;
 
-window.onload = () => {
+function scanDocument() {
   const article = new Readability(document.cloneNode(true) as Document).parse();
+
   /* Should return an object with the following properties (https://github.com/mozilla/readability):
    *
    *   - `title`: article title
@@ -38,8 +39,8 @@ window.onload = () => {
 
     if (corpus.split(/\s+/).length < 200) {
       browser.runtime.sendMessage({
-        type: "SET_CLASSIFIER_SCORE",
-        value: null,
+        type: `SET_CLASSIFIER_SCORE_${window.location.hostname}`,
+        value: "ARTICLE_TOO_SHORT",
       });
 
       console.log(
@@ -62,7 +63,7 @@ window.onload = () => {
     const exceededThreshold: boolean = normalizedScore > threshold;
 
     browser.runtime.sendMessage({
-      type: "SET_CLASSIFIER_SCORE",
+      type: `SET_CLASSIFIER_SCORE_${window.location.hostname}`,
       value: normalizedScore,
     });
 
@@ -80,10 +81,14 @@ window.onload = () => {
     console.table(results);
     console.groupEnd();
 
-    if (exceededThreshold) {
-      alert(
-        `A considerable amount of this page may contain content written or refined by AI. The normalized score is ${(normalizedScore * 100).toFixed(2)}%.`,
-      );
-    }
+    // if (exceededThreshold) {
+    //   alert(
+    //     "A considerable amount of this page may contain content written or refined by AI.",
+    //   );
+    // }
   }
+}
+
+window.onload = () => {
+  scanDocument();
 };

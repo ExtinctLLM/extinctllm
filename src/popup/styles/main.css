@@ -1,15 +1,21 @@
 @import "tailwindcss";
 
-:root {
-  --color-popup-background-primary: #212b4f;
-  --color-popup-panel-primary: #435182;
-  --color-popup-text-primary: #aab9ed;
+@theme {
+  --color-bg-primary: #212b4f;
+
+  --color-panel-primary: #435182;
+
+  --color-actionrow-button-text-primary: #8997c4;
+  --color-actionrow-button-text-green: #89c4a5;
+  --color-actionrow-button-text-red: #c49089;
+
+  --color-text-primary: #aab9ed;
 }
 
 html,
 body,
 #app {
   @apply p-0 m-0;
-  @apply min-w-3xs max-w-xs;
-  background-color: var(--color-popup-background-primary);
+  @apply min-w-xs w-sm max-w-md;
+  @apply bg-(--color-bg-primary);
 }

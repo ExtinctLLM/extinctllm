@@ -3,7 +3,7 @@
   "name": "ExtinctLLM",
   "description": "Show an alert on pages containing potentially AI-generated content.",
   "version": "0.1.0",
-  "permissions": ["scripting"],
+  "permissions": ["scripting", "storage"],
   "action": {
     "default_popup": "src/popup/index.html",
     "default_icon": {
