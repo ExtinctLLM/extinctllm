@@ -234,6 +234,6 @@ function showDetectionAlert(confidence: number) {
   buttonContainer.appendChild(returnButton);
 }
 
-window.onload = () => {
-  scanDocument();
-};
+document.addEventListener("DOMContentLoaded", () => {
+  setTimeout(scanDocument, 1000);
+});
