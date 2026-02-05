@@ -11,12 +11,16 @@ const compiledPatterns: Record<number, RegExp[]> = Object.fromEntries(
 
 export default class TextClassifier {
   chunkSize: number;
+  wLex: number;
+  wBurst: number;
 
-  constructor(chunkSize: number) {
+  constructor(chunkSize: number, wLex: number, wBurst: number) {
     this.chunkSize = chunkSize;
+    this.wLex = wLex;
+    this.wBurst = wBurst;
   }
 
-  analyze(corpus: string): [Record<number, number>, number] {
+  analyze(corpus: string): [Record<number, number>, number, number] {
     let matchMap: Record<number, number> = {};
     let alpha: number = 0;
 
@@ -36,10 +40,29 @@ export default class TextClassifier {
       }
     }
 
-    return [matchMap, alpha];
+    const tokens: string[] = corpus.toLowerCase().match(/\b\w+\b/g) || [];
+    const uniqueTokens: Set<string> = new Set(tokens);
+    const lexicalDiversity = uniqueTokens.size / tokens.length;
+
+    const sentences: string[] = corpus.split(/(?<=[.!?])\s+/);
+    const sentenceLengths: number[] = sentences.map(
+      (s) => s.split(/\b\w+\b/).length,
+    );
+    const meanSentenceLength: number =
+      sentenceLengths.reduce((a, b) => a + b, 0) / sentenceLengths.length;
+    const variance: number =
+      sentenceLengths.reduce((a, b) => a + (b - meanSentenceLength) ** 2, 0) /
+      sentenceLengths.length; // average sentence length variance
+    const burstiness: number = Math.sqrt(variance) / meanSentenceLength;
+
+    const linguisticScore: number =
+      lexicalDiversity * this.wLex +
+      (1 - Math.min(burstiness, 2) / 2) * this.wBurst;
+
+    return [matchMap, alpha, linguisticScore];
   }
 
-  calculateScore(matchMap: Record<number, number>): number {
+  calculatePatternScore(matchMap: Record<number, number>): number {
     return Object.entries(matchMap).reduce(
       (acc, [score, matches]) => (acc += Number(score) * matches),
       0,
@@ -48,11 +71,15 @@ export default class TextClassifier {
 
   normalizeScore(
     corpusLength: number,
-    score: number,
+    patternScore: number,
     alpha: number,
+    linguisticScore: number,
     scale: number,
   ): number {
     const scaledAlpha: number = Math.abs(alpha) ** scale;
-    return 1 - Math.exp((-scaledAlpha * score) / corpusLength);
+    return (
+      1 -
+      Math.exp((-scaledAlpha * patternScore ** linguisticScore) / corpusLength)
+    );
   }
 }

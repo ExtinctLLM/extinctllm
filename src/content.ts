@@ -1,9 +1,17 @@
 import TextClassifier from "@/utils/textClassifier";
 import { Readability } from "@mozilla/readability";
-import { getData } from "@/utils/storage";
+import { setData, getData } from "@/utils/storage";
 
-const textClassifier = new TextClassifier(1024);
-const threshold = 0.5;
+const chunkSize: number = 1024;
+const wLex: number = 0.7;
+const wBurst: number = 0.7;
+const threshold: number = 0.5;
+
+const textClassifier: TextClassifier = new TextClassifier(
+  chunkSize,
+  wLex,
+  wBurst,
+);
 
 async function scanDocument() {
   const article = new Readability(document.cloneNode(true) as Document).parse();
@@ -39,14 +47,18 @@ async function scanDocument() {
     );
 
     const currentDomain: string | null = window.location.hostname;
-    const exceptionsList: string[] = await getData("exceptionsList");
+    let exceptionsList: string[] | null = await getData("exceptionsList");
+
+    if (!exceptionsList) {
+      exceptionsList = [];
+      await setData("exceptionsList", exceptionsList);
+    }
 
     if (exceptionsList.includes(currentDomain)) {
       console.log(
         "This domain has been whitelisted. No scan will be initiated.",
       );
       console.groupEnd();
-
       return;
     }
 
@@ -57,7 +69,6 @@ async function scanDocument() {
     ) {
       console.log("This page has been whitelisted. No scan will be initiated.");
       console.groupEnd();
-
       return;
     }
 
@@ -75,13 +86,17 @@ async function scanDocument() {
       return;
     }
 
-    const [matchMap, alpha]: [Record<number, number>, number] =
-      textClassifier.analyze(corpus);
-    const score: number = textClassifier.calculateScore(matchMap);
+    const [matchMap, alpha, linguisticScore]: [
+      Record<number, number>,
+      number,
+      number,
+    ] = textClassifier.analyze(corpus);
+    const patternScore: number = textClassifier.calculatePatternScore(matchMap);
     const normalizedScore: number = textClassifier.normalizeScore(
       corpus.length,
-      score,
+      patternScore,
       alpha,
+      linguisticScore,
       2.25,
     );
     const exceededThreshold: boolean = normalizedScore > threshold;
@@ -95,7 +110,8 @@ async function scanDocument() {
       { Metric: "Corpus Size", Value: `${corpus.length} chars` },
       { Metric: "Match Map", Value: matchMap },
       { Metric: "Unscaled Alpha", Value: alpha },
-      { Metric: "Raw Score", Value: score },
+      { Metric: "Raw Pattern Score", Value: patternScore },
+      { Metric: "Raw Linguistic Score", Value: linguisticScore },
       {
         Metric: "Normalized Score",
         Value: normalizedScore,
@@ -235,5 +251,5 @@ function showDetectionAlert(confidence: number) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  setTimeout(scanDocument, 1000);
+  scanDocument();
 });
