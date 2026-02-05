@@ -1,4 +1,4 @@
-# ExtinctLLM
+# Extinction
 
 An ultra-lightweight AI content blocker browser extension powered by regex-based
 pattern matching and linguistic analysis. It has an **average precision of about
@@ -9,7 +9,7 @@ pattern matching and linguistic analysis. It has an **average precision of about
 
 In the current era, the Internet is becoming increasingly plagued with AI-written or
 inauthentic content. It may not be much of a problem for some, but many people wish
-to not see this type of content on the Web. ExtinctLLM is a proof-of-concept browser
+to not see this type of content on the Web. Extinction is a proof-of-concept browser
 extension that blocks AI-generated text across many websites, with built-in
 whitelisting support.
 
@@ -22,12 +22,12 @@ it can reach satisfactory levels when certain exceptions/limitations are impleme
 
 ## How It Works
 
-This section explains ExtinctLLM's algorithm and how it classifies text as either
+This section explains Extinction's algorithm and how it classifies text as either
 human-written or AI-written.
 
 ### Point-Based Pattern Matching
 
-ExtinctLLM uses a precompiled list of regular expressions, with each regex pattern
+Extinction uses a precompiled list of regular expressions, with each regex pattern
 assigned a certain "point" value depending on how common it appears in AI-generated
 content.
 

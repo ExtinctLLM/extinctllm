@@ -40,7 +40,7 @@ async function scanDocument() {
     ).trim();
 
     console.group(
-      "%cCorpus Scan Status\n%cfrom %cExtinctLLM",
+      "%cCorpus Scan Status\n%cfrom %cExtinction",
       "font-size: 2em;",
       "font-size: 1em; color: gray;",
       "font-style: italic;",
