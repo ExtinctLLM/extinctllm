@@ -4,6 +4,12 @@
   "description": "An ultra-lightweight AI content blocker extension.",
   "version": "0.0.0",
   "permissions": ["activeTab", "scripting", "storage"],
+  "{{firefox}}.browser_specific_settings": {
+    "gecko": {
+      "id": "@extinction.extinction-team",
+      "strict_min_version": "58.0"
+    }
+  },
   "action": {
     "default_popup": "src/popup/index.html",
     "default_icon": {
