@@ -246,6 +246,7 @@ function showDetectionAlert(confidence: number) {
     box-sizing: border-box;
     width: 100%;
     padding: 12px 48px;
+    font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     font-size: 20px;
     font-weight: 600;
     text-align: center;
